@@ -11,14 +11,15 @@ class VinteUm:
         self.jogador_maquina = []
     
     def inicio(self):
-        self.criar_montante()
-        self.baralho = self.embaralhar()
-        self.dividir_cartas()
+        self.criar_montante() #criar as cartas do baralho
+        self.baralho = self.embaralhar() #embaralhar
+        self.dividir_cartas() #tirar do baralho 3 cartas para cada um
 
         x = True
         while x == True:
-            self.acoes()
+            self.acoes() #dar opcoes para o jogador humano
             resultado = self.verificar_soma()
+            #se a soma das cartas do jogador maquina for igual a 21
             if resultado:
                 print("\n\033[32m"+"JOGADOR MAQUINA VENCEU!"+"\033[0;0m")
                 print("CARTAS: {}".format(self.jogador_maquina))
@@ -27,7 +28,8 @@ class VinteUm:
                 print("\n\033[1m"+"Maquina jogando...\n"+"\033[0;0m")
                 sleep(4)
                 self.comprar_carta(2)
-                som_comb = self.somar_combinacoes(2)
+                som_comb = self.somar_combinacoes(2) #somar as cartas apos a compra
+                #se tiver dados 21
                 if som_comb != False:
                     print("\n\033[32m"+"JOGADOR MAQUINA VENCEU!"+"\033[0;0m")
                     print("CARTAS: {}".format(self.jogador_maquina))
@@ -37,6 +39,8 @@ class VinteUm:
                     self.descartar(2)
 
     def acoes(self):
+        """Dar as opcoes para o usuario humano."""
+
         print("Suas cartas: {}".format(self.jogador_humano))
         if self.descarte != None:
             print("Carta descartada: {}".format(self.descarte))
@@ -57,6 +61,8 @@ class VinteUm:
             self.acoes()
 
     def criar_montante(self):
+        """Criar o conjunto de cartas do baralho."""
+
         for i in range(1, 11):
             if i != 10:
                 for g in range(4):
@@ -66,41 +72,53 @@ class VinteUm:
                     self.baralho.append(i)
     
     def embaralhar(self):
+        """Embaralhar as cartas do baralho"""
+
         return shuffle(self.baralho)
     
-    def dividir_cartas(self):        
+    def dividir_cartas(self):
+        """Retirar 3 cartas do baralho para cada jogador."""
+        copia_baralho = self.baralho  #copia por causa do POP
         for i in range(3):
             self.jogador_humano.append(self.baralho.pop())
             self.jogador_maquina.append(self.baralho.pop())
         
+        #Para que  o jogo nunca comece com as cartas ja valendo 21
+        #se dividir as cartas e for 21, dividira novamente
         if sum(self.jogador_humano) == 21 or sum(self.jogador_maquina) == 21:
-            self.dividir_cartas
+            self.baralho = copia_baralho
+            self.dividir_cartas()
     
     def verificar_soma(self):
+        """Retornar se a soma das cartas sao 21."""
+
         if sum(self.jogador_maquina) == 21:
             return True
         else:
             return False
 
     def comprar_carta(self, jogador):
+        """Retira +1 carta do baralho para um dos jogadores."""
+
         if jogador == 1: #Humano
             self.jogador_humano.append(self.baralho.pop())
         else: #Maquina
             self.jogador_maquina.append(self.baralho.pop())
     
-    def pegar_descarte(self, jogador):
+    def pegar_descarte(self):
+        """Pega a carta que está no descarte para o ojogador humano."""
+
         if self.descarte == None:
             return False
         else:
-            if jogador == 1: #Humano
-                self.jogador_humano.append(self.descarte)
-                self.descarte = None
-            else: #Maquina
-                self.jogador_maquina.append(self.descarte)
-                self.descarte = None
+            self.jogador_humano.append(self.descarte)
+            self.descarte = None
+
             return True
     
     def descartar(self, jogador):
+        """Retirar uma carta de um dos jogadores."""
+
         if jogador == 1: #Humano
             carta = int(input("Carta para descartar: "))
             posicao_carta = self.jogador_humano.index(carta)
@@ -116,6 +134,7 @@ class VinteUm:
             exit(0)
     
     def somar_combinacoes(self, jogador):
+        """Com as 4 cartas, a funcao tenta se de alguma forma e possivel dar 21 usando 3 cartas."""
         if jogador == 1:
             for i in self.jogador_humano:
                 if (sum(self.jogador_humano) - i) == 21:
