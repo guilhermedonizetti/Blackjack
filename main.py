@@ -86,6 +86,7 @@ class VinteUm:
         #Para que  o jogo nunca comece com as cartas ja valendo 21
         #se dividir as cartas e for 21, dividira novamente
         if sum(self.jogador_humano) == 21 or sum(self.jogador_maquina) == 21:
+            self.jogador_humano = self.jogador_maquina = 0
             self.baralho = copia_baralho
             self.dividir_cartas()
     
@@ -122,9 +123,9 @@ class VinteUm:
         if jogador == 1: #Humano
             carta = int(input("Carta para descartar: "))
             posicao_carta = self.jogador_humano.index(carta)
-            self.jogador_humano.pop(posicao_carta)
+            self.descarte = self.jogador_humano.pop(posicao_carta)
         else:
-            self.jogador_maquina.pop(randint(0,3))
+            self.descarte = self.jogador_maquina.pop(randint(0,3))
     
     def bater_jogo(self):
         resultado = self.somar_combinacoes(1)
@@ -152,24 +153,3 @@ class VinteUm:
 
 jogo = VinteUm()
 jogo.inicio()
-"""
-
-1. Criar montante de cartas (baralho)
-2. Embaralhar
-3. Tirar 3 cartas para cada participante
-
-Jogando...
-
-1. Verificar se o valor das cartas somam 21
-    Sim: Bater o jogo (Ganhar e encerrar)
-    NAO: continua...
-2. Pegar a carta descartada
-    SIM: executa o passo 4
-    NAO: continua...
-3. Comprar uma carta
-4. Verificar se o valor das cartas somam 21
-    Sim: Bater o jogo (Ganhar e encerrar)
-    NAO: continua...
-5. Descartar uma carta
-
-"""
